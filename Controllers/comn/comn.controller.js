@@ -1,7 +1,7 @@
 ﻿const db = require('@db/models');
 const rabbitConfig = require('@config/rabbitmq');
 
-const NotificationService = require('@app/services/notification.service');
+const NotificationService = require('@app/Services/notification.service');
 
 const EMAIL_COST = Number(process.env.EMAIL_COST || 1);
 const SMS_COST = Number(process.env.SMS_COST || 3);
