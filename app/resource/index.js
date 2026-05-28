@@ -1,7 +1,7 @@
 
-const UserResource = require('./UserResource');
-const ContactResource = require('./ContactResource');
-const ApiKeyResource = require('./ApiKeyResource');
+const UserResource = require('./userResource');
+const ContactResource = require('./contactResource');
+const ApiKeyResource = require('./apiKeyResource');
 
 module.exports = {
     UserResource,
