@@ -2,7 +2,8 @@ const express = require('express');
 const validateRequest = require('@middlewares/validate');
 const { EmailValidator, SmsValidator } = require('@app/Validators');
 const comnController = require('@controllers/comn/comn.controller');
-const { checkApiKey } = require('@middlewares/key');
+
+const { checkApiKey } = require('@middlewares/Key');
 
 const router = express.Router();
 
