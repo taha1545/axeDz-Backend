@@ -1,7 +1,8 @@
 const express = require('express');
+
 const validateRequest = require('@middlewares/validate');
 const { PaymentValidator } = require('@app/Validators');
-const { checkAuth } = require('@app/middlewares/Auth');
+const { checkAuth } = require('@middlewares/Auth');
 
 const paymentController = require('@controllers/payment/payment.controller');
 const transactionController = require('@controllers/payment/transaction.controller');
