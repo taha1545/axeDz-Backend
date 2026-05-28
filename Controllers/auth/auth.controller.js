@@ -5,7 +5,7 @@ const logger = require("@config/logger");
 const db = require("@db/models");
 
 const { AuthorizeError, NotFoundError } = require("@errors");
-const { UserResource } = require("@app/Resource");
+const { UserResource } = require("@app/resource");
 
 const WelcomeMail = require("@app/mail/welcome.mail");
 const SmsOtp = require("@app/sms/sms");
