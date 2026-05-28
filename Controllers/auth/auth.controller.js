@@ -10,7 +10,7 @@ const { UserResource } = require("@app/resource");
 const WelcomeMail = require("@app/mail/welcome.mail");
 const SmsOtp = require("@app/sms/sms");
 
-const OtpService = require("@app/services/OtpService");
+const OtpService = require("@app/Services/OtpService");
 
 const Auth = require("@app/jwt/Auth");
 const TokenSession = require("@app/jwt/TokenSession");

@@ -4,7 +4,7 @@ const db = require("@db/models");
 const { NotFoundError } = require("@errors");
 
 const SmsOtp = require("@app/sms/sms");
-const OtpService = require("@app/services/OtpService");
+const OtpService = require("@app/Services/OtpService");
 
 
 const sendVerifySmsOtp = async (req, res) => {

@@ -5,7 +5,7 @@ const db = require("@db/models");
 const { NotFoundError } = require("@errors");
 
 const OtpMail = require("@app/mail/otp.mail");
-const OtpService = require("@app/services/OtpService");
+const OtpService = require("@app/Services/OtpService");
 
 
 const sendResetOtp = async (req, res) => {

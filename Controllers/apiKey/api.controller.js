@@ -4,7 +4,6 @@ const { NotFoundError } = require('@errors');
 const db = require('@db/models');
 const { Op } = require('sequelize');
 const crypto = require('crypto');
-const user = require('../../db/models/user');
 
 const createApiKey = async (req, res) => {
     //
