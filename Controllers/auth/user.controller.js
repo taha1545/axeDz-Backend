@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 const db = require("@db/models");
 const { AuthorizeError, NotFoundError } = require("@errors");
-const  UserResource  = require("@app/resource/UserResource");
+
+const { UserResource } = require("@app/resource");
 const S3HandleJsonImage = require("@app/s3/HandleJson");
 
 
