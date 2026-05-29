@@ -11,6 +11,7 @@ router.post('/send-email', checkApiKey, EmailValidator.sendEmailValidator, valid
 router.post('/send-sms', checkApiKey, SmsValidator.sendSmsValidator, validateRequest, comnController.sendSms);
 
 router.get('/usage', checkApiKey, comnController.getUsageEvents);
+router.get('/wallet', checkApiKey, comnController.getWallet);
 router.get('/emails', checkApiKey, comnController.getEmails);
 router.get('/sms', checkApiKey, comnController.getSms);
 

@@ -162,6 +162,26 @@ const getSms = async (req, res, next) => {
   });
 };
 
+const getWallet = async (req, res, next) => {
+  const wallet = req.apiKey?.wallet;
+
+  if (!wallet) {
+    throw new Error('Wallet not found for this API key');
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      id: wallet.id,
+      user_id: wallet.user_id,
+      balance: wallet.balance,
+      currency: wallet.currency,
+      is_free: wallet.is_free,
+      free_expires_at: wallet.free_expires_at,
+    },
+    message: 'Wallet balance fetched successfully',
+  });
+};
 
 module.exports = {
   sendEmail,
@@ -169,4 +189,5 @@ module.exports = {
   getUsageEvents,
   getEmails,
   getSms,
+  getWallet,
 };

@@ -41,7 +41,7 @@ const processNotification = async ({
             {
                 api_key_id: apiKeyRecord.id,
                 ...createPayload,
-                status: isFreeActive ? 'simulated' : 'queued',
+                status: 'queued',
                 retry_count: 0,
             },
             { transaction }
