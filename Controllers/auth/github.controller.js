@@ -38,7 +38,7 @@ passport.use(
                         github_id: profile.id,
                         name: profile.displayName || profile.username,
                         email,
-                        is_verified: true,
+                        is_verified: false,
                     });
                     //
                     if (email) {

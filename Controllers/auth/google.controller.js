@@ -38,7 +38,7 @@ passport.use(
                         google_id: profile.id,
                         name: profile.displayName,
                         email,
-                        is_verified: true,
+                        is_verified: false,
                     });
                     // Send welcome email (non-blocking)
                     if (email) {
