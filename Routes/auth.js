@@ -32,6 +32,6 @@ router.get('/me', checkAuth, userController.getUserByToken);
 router.put('/update', checkAuth, UserValidator.updateUserValidation, validateRequest, userController.updateUserByToken);
 
 router.get('/storage', storageController.getSignedUrl);
-router.delete('/storage', storageController.deleteStorageFile);{}
+router.delete('/storage', storageController.deleteStorageFile);
 
 module.exports = router;

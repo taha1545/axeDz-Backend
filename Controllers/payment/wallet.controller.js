@@ -56,7 +56,39 @@ const getWalletBalance = async (req, res, next) => {
   });
 };
 
+const setWalletAlert = async (req, res, next) => {
+  //
+  const userId = req.user.id;
+  const { threshold } = req.body;
+  //
+  if (!userId) {
+    throw new ValidationError('Invalid userId');
+  }
+  if (threshold == null || threshold < 0) {
+    throw new ValidationError('Invalid alert threshold');
+  }
+  //
+  const wallet = await db.Wallet.findOne({
+    where: { user_id: userId },
+  });
+  if (!wallet) {
+    throw new NotFoundError('Wallet not found');
+  }
+  await wallet.update({
+    low_balance_alert: threshold,
+  });
+  //
+  return res.status(200).json({
+    success: true,
+    message: 'Wallet alert set successfully',
+    data: {
+      low_balance_alert: wallet.low_balance_alert,
+    },
+  });
+};
+
 module.exports = {
   getWalletBalance,
   switchToProduction,
+  setWalletAlert,
 };

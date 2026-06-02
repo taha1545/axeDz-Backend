@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      low_balance_alert: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       tableName: "wallets",

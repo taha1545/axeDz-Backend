@@ -49,4 +49,6 @@ router.post(
     walletController.switchToProduction
 );
 
+router.post('/wallet/alert', checkAuth, walletController.setWalletAlert);
+
 module.exports = router;

@@ -1,5 +1,5 @@
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GitHubStrategy = require('passport-github2').Strategy;
 const { Op } = require('sequelize');
 
 const db = require('@db/models');
@@ -7,11 +7,11 @@ const logger = require('@config/logger');
 const WelcomeMail = require('@app/mail/welcome.mail');
 
 passport.use(
-    new GoogleStrategy(
+    new GitHubStrategy(
         {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.GOOGLE_CALLBACK_URL,
+            clientID: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            callbackURL: process.env.GITHUB_CALLBACK_URL,
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -21,26 +21,26 @@ passport.use(
                 const user = await db.User.findOne({
                     where: {
                         [Op.or]: [
-                            { google_id: profile.id },
+                            { github_id: profile.id },
                             ...(email ? [{ email }] : [])
                         ]
                     }
                 });
                 let finalUser = user;
                 // 
-                if (finalUser && !finalUser.google_id) {
-                    finalUser.google_id = profile.id;
+                if (finalUser && !finalUser.github_id) {
+                    finalUser.github_id = profile.id;
                     await finalUser.save();
                 }
                 // 
                 if (!finalUser) {
                     finalUser = await db.User.create({
-                        google_id: profile.id,
-                        name: profile.displayName,
+                        github_id: profile.id,
+                        name: profile.displayName || profile.username,
                         email,
                         is_verified: true,
                     });
-                    // Send welcome email (non-blocking)
+                    //
                     if (email) {
                         WelcomeMail.sendMail(email).catch((err) => {
                             logger.error(
@@ -50,23 +50,20 @@ passport.use(
                         });
                     }
                 }
-                //
+
                 return done(null, finalUser);
-                //
             } catch (err) {
-                logger.error('GOOGLE_AUTH_ERROR', err);
+                logger.error('GITHUB_AUTH_ERROR', err);
                 return done(err, null);
             }
         }
     )
 );
 
-// Serialize user
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
+// serialize
+passport.serializeUser((user, done) => done(null, user.id));
 
-// Deserialize user
+// deserialize
 passport.deserializeUser(async (id, done) => {
     try {
         const user = await db.User.findByPk(id);

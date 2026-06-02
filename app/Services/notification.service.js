@@ -65,7 +65,22 @@ const processNotification = async ({
                 { balance: newBalance.toFixed(2) },
                 { transaction }
             );
-            emitWalletUpdate(apiKeyRecord.user_id, newBalance.toFixed(2));
+            //
+            const payload = {
+                balance: newBalance.toFixed(2),
+                alert: false,
+            };
+
+            if (
+                wallet.low_balance_alert &&
+                newBalance <= Number(wallet.low_balance_alert)
+            ) {
+                payload.alert = true;
+                payload.alertThreshold = wallet.low_balance_alert;
+                payload.message = `Wallet balance is below ${wallet.low_balance_alert}`;
+            }
+            emitWalletUpdate(apiKeyRecord.user_id, payload);
+            //
             await db.Transaction.create(
                 {
                     user_id: apiKeyRecord.user_id,

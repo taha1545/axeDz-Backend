@@ -6,7 +6,7 @@ const AuthorizeError = require('@errors/UnauthorizedError');
 const {
     JWT_SECRET,
     JWT_REFRESH_SECRET,
-    JWT_LIFETIME = '15m',
+    JWT_LIFETIME = '1d',
     JWT_REFRESH_LIFETIME = '30d',
 } = process.env;
 

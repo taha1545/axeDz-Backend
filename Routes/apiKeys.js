@@ -16,6 +16,14 @@ router.get('/:id', checkAuth, apiKeyController.getApiKeyById);
 router.put('/:id', checkAuth, apiKeyController.updateApiKey);
 router.delete('/:id', checkAuth, apiKeyController.deleteApiKey);
 
+router.patch('/:id/rotate', checkAuth, apiKeyController.rotateApiKey);
+
+router.get(
+    '/:id/stats',
+    checkAuth,
+    apiKeyController.getApiKeyStats
+);
+
 module.exports = router;
 
 

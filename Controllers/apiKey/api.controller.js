@@ -139,6 +139,60 @@ const validateApiKey = async (req, res) => {
     });
 };
 
+const rotateApiKey = async (req, res) => {
+    //
+    const apiKey = await db.ApiKey.findOne({
+        where: {
+            id: req.params.id,
+            user_id: req.user.id,
+        },
+    });
+    if (!apiKey) {
+        throw new NotFoundError('API key not found');
+    }
+    //
+    const newKey = crypto.randomUUID();
+    //
+    apiKey.key = newKey;
+    await apiKey.save();
+    //
+    return res.status(200).json({
+        success: true,
+        message: 'API key rotated successfully',
+        apiKey: ApiKeyResource(apiKey),
+    });
+};
+
+const getApiKeyStats = async (req, res) => {
+    //
+    const apiKey = await db.ApiKey.findOne({
+        where: {
+            id: req.params.id,
+            user_id: req.user.id,
+        },
+    });
+    if (!apiKey) throw new NotFoundError('API key not found');
+    //
+    const [smsCount, emailCount, usage] = await Promise.all([
+        db.SmsLog.count({ where: { api_key_id: apiKey.id } }),
+        db.EmailLog.count({ where: { api_key_id: apiKey.id } }),
+        db.UsageEvent.findAll({
+            where: { api_key_id: apiKey.id },
+        }),
+    ]);
+    const totalCost = usage.reduce((sum, u) => sum + Number(u.total_cost), 0);
+    //
+    return res.json({
+        success: true,
+        data: {
+            smsCount,
+            emailCount,
+            totalCost,
+            wallet: req.apiKey?.wallet?.balance,
+        },
+    });
+};
+
 module.exports = {
     createApiKey,
     listApiKeys,
@@ -146,4 +200,6 @@ module.exports = {
     updateApiKey,
     deleteApiKey,
     validateApiKey,
+    rotateApiKey,
+    getApiKeyStats,
 };

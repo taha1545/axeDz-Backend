@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: true,
       },
+      github_id: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: true,
+      },
       imagePath: {
         type: DataTypes.STRING,
         allowNull: true,

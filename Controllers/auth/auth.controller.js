@@ -18,55 +18,65 @@ const TokenSession = require("@app/jwt/TokenSession");
 
 const signUp = async (req, res) => {
     //
-    const { name, email, phone, password } = req.body;
-    const imagePath = req.file?.key || null;
-    //
-    const hashedPassword = await bcrypt.hash(password, 8);
-    const user = await db.User.create({
-        name,
-        email,
-        phone: phone,
-        password: hashedPassword,
-        imagePath,
-        is_verified: false,
-    });
-    const wallet = await db.Wallet.create({
-        currency: 'DZD',
-        balance: 0,
-        user_id: user.id,
-        is_free: true,
-        free_expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    });
-    //
-    const { otpCode } = await OtpService.createOtpRecord({
-        db,
-        userId: user.id,
-        type: "verifySms",
-    });
-    //
-    const { accessToken, refreshToken } = TokenSession.createTokens(user);
-    TokenSession.setRefreshCookie(res, refreshToken);
-    //  email 
-    WelcomeMail.sendMail(user.email).catch((err) => {
-        logger.error(
-            `WELCOME_EMAIL_FAILED userId=${user.id}`,
-            err.message
-        );
-    });
-    //  SMS 
-    SmsOtp.send(phone, otpCode).catch((err) => {
-        logger.error(
-            `SMS_OTP_FAILED userId=${user.id}`,
-            err.message
-        );
-    });
-    //
-    return res.status(201).json({
-        success: true,
-        message: "User created successfully. Please verify your phone if provided.",
-        data: UserResource(user),
-        accessToken,
-    });
+    const t = await db.sequelize.transaction();
+    try {
+        //
+        const { name, email, phone, password } = req.body;
+        const imagePath = req.file?.key || null;
+        //
+        const hashedPassword = await bcrypt.hash(password, 8);
+        const user = await db.User.create({
+            name,
+            email,
+            phone,
+            password: hashedPassword,
+            imagePath,
+            is_verified: false,
+        }, { transaction: t });
+        const wallet = await db.Wallet.create({
+            currency: 'DZD',
+            balance: 0,
+            user_id: user.id,
+            is_free: true,
+            free_expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        }, { transaction: t });
+        const { otpCode } = await OtpService.createOtpRecord({
+            db,
+            userId: user.id,
+            type: "verifySms",
+            transaction: t,
+        });
+        //  Commit transaction
+        await t.commit();
+        // 
+        const { accessToken, refreshToken } = TokenSession.createTokens(user);
+        TokenSession.setRefreshCookie(res, refreshToken);
+        // 
+        WelcomeMail.sendMail(user.email).catch((err) => {
+            logger.error(`WELCOME_EMAIL_FAILED userId=${user.id}`, err.message);
+        });
+        //
+        SmsOtp.send(phone, otpCode).catch((err) => {
+            logger.error(`SMS_OTP_FAILED userId=${user.id}`, err.message);
+        });
+        //
+        return res.status(201).json({
+            success: true,
+            message: "User created successfully. Please verify your phone.",
+            data: UserResource(user),
+            accessToken,
+        });
+
+    } catch (error) {
+        // 
+        await t.rollback();
+        logger.error("SIGNUP_FAILED", error);
+        //
+        return res.status(500).json({
+            success: false,
+            message: "Signup failed",
+        });
+    }
 };
 
 const login = async (req, res) => {

@@ -8,8 +8,10 @@ const paymentRoutes = require('./payment');
 const comnRoutes = require('./comn');
 const adminRoutes = require('./admin');
 const googleRoutes = require('./google');
+const githubRoutes = require('./github');
 
 router.use('/google', googleRoutes);
+router.use('/github', githubRoutes);
 router.use('/auth', authRoutes);
 router.use('/contacts', contactsRoutes);
 router.use('/api-keys', apiKeysRoutes);
