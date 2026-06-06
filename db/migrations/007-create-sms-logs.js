@@ -20,7 +20,7 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       to_number: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSONB,
         allowNull: false,
       },
       message: {
@@ -29,6 +29,18 @@ module.exports = {
       },
       provider: {
         type: Sequelize.STRING,
+        allowNull: true,
+      },
+      callback_url: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      callback_data: {
+        type: Sequelize.JSONB,
+        allowNull: true,
+      },
+      status_code: {
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       status: {

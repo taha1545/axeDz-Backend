@@ -2,15 +2,16 @@ const { body } = require('express-validator');
 
 const sendEmailValidator = [
     body('to_email')
-        .exists({ checkFalsy: true })
-        .withMessage('to_email is required')
-        .bail()
+        .isArray({ min: 1 })
+        .withMessage('to_email must be a non-empty array'),
+
+    body('to_email.*')
         .trim()
         .isEmail()
-        .withMessage('Invalid email format')
+        .withMessage('Each recipient email must be valid')
         .normalizeEmail()
         .isLength({ max: 255 })
-        .withMessage('Email must be at most 255 characters'),
+        .withMessage('Each email must be at most 255 characters'),
 
     body('subject')
         .exists({ checkFalsy: true })
@@ -39,11 +40,10 @@ const sendEmailValidator = [
         .isURL()
         .withMessage('callback_url must be a valid URL'),
 
-    body('callbackData')
+    body('callback_data')
         .optional()
         .isObject()
         .withMessage('callbackData must be an object'),
-
     body('senderName')
         .optional()
         .isString()

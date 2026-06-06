@@ -18,6 +18,16 @@ const sendSmsValidator = [
         .isLength({ min: 1, max: 160 })
         .withMessage('Message must be between 1 and 160 characters'),
 
+    body('callback_url')
+        .optional()
+        .isURL()
+        .withMessage('callback_url must be a valid URL'),
+
+    body('callback_data')
+        .optional()
+        .isObject()
+        .withMessage('callback_data must be an object'),
+
     body('senderName')
         .optional()
         .trim()

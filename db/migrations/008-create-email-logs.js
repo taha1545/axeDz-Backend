@@ -20,7 +20,7 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       to_email: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSONB,
         allowNull: false,
       },
       subject: {
@@ -35,6 +35,18 @@ module.exports = {
         type: Sequelize.ENUM('text', 'html'),
         allowNull: false,
         defaultValue: 'text',
+      },
+      callback_url: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      callback_data: {
+        type: Sequelize.JSONB,
+        allowNull: true,
+      },
+      status_code: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
       },
       status: {
         type: Sequelize.ENUM('queued', 'sent', 'failed'),

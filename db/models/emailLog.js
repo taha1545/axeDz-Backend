@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
       },
       to_email: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSONB,
         allowNull: false,
       },
       subject: {
@@ -30,6 +30,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("text", "html"),
         allowNull: false,
         defaultValue: "text",
+      },
+      callback_url: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      callback_data: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+      },
+      status_code: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       status: {
         type: DataTypes.ENUM("queued", "sent", "failed"),
@@ -56,4 +68,4 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   return EmailLog;
-};;
+};

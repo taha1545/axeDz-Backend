@@ -9,7 +9,7 @@ const SMS_COST = Number(process.env.SMS_COST);
 
 const sendEmail = async (req, res, next) => {
   //
-  const { to_email, subject, body, body_type = 'text', callback_url = "", callbackData = {}, senderName } = req.body;
+  const { to_email, subject, body, body_type = 'text', callback_url = "", callback_data = {}, senderName } = req.body;
   //
   const apiKeyRecord = req.apiKey;
   if (!apiKeyRecord) {
@@ -26,6 +26,8 @@ const sendEmail = async (req, res, next) => {
       subject,
       body,
       body_type,
+      callback_url,
+      callback_data,
     },
     queuePayload: {
       to_email,
@@ -33,7 +35,7 @@ const sendEmail = async (req, res, next) => {
       body,
       body_type,
       callback_url,
-      callbackData,
+      callbackData :callback_data,
       senderName
     },
     queue: rabbitConfig.queues.email,
@@ -50,7 +52,7 @@ const sendEmail = async (req, res, next) => {
 
 const sendSms = async (req, res, next) => {
   //
-  const { to_number, message, provider = null, callback_url = "", clientCorrelator = {} } = req.body;
+  const { to_number, message, provider = null, callback_url = "", callback_data = {} } = req.body;
   const senderName = "axedz";
   //
   const apiKeyRecord = req.apiKey;
@@ -67,6 +69,8 @@ const sendSms = async (req, res, next) => {
       to_number,
       message,
       provider,
+      callback_url,
+      callback_data,
     },
     queuePayload: {
       to_number,
@@ -74,7 +78,7 @@ const sendSms = async (req, res, next) => {
       provider,
       senderName,
       callback_url,
-      clientCorrelator
+      clientCorrelator : callback_data,
     },
     queue: rabbitConfig.queues.sms,
   });
