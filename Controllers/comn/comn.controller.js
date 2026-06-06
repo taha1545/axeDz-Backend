@@ -3,13 +3,13 @@ const rabbitConfig = require('@config/rabbitmq');
 
 const NotificationService = require('@app/Services/notification.service');
 
-const EMAIL_COST = Number(process.env.EMAIL_COST || 0.5);
-const SMS_COST = Number(process.env.SMS_COST || 2);
+const EMAIL_COST = Number(process.env.EMAIL_COST);
+const SMS_COST = Number(process.env.SMS_COST);
 
 
 const sendEmail = async (req, res, next) => {
   //
-  const { to_email, subject, message, body_type = 'text', callback_url = "" } = req.body;
+  const { to_email, subject, body, body_type = 'text', callback_url = "", callbackData = {}, senderName } = req.body;
   //
   const apiKeyRecord = req.apiKey;
   if (!apiKeyRecord) {
@@ -24,15 +24,17 @@ const sendEmail = async (req, res, next) => {
     createPayload: {
       to_email,
       subject,
-      body: message,
+      body,
       body_type,
     },
     queuePayload: {
       to_email,
       subject,
-      message,
+      body,
       body_type,
       callback_url,
+      callbackData,
+      senderName
     },
     queue: rabbitConfig.queues.email,
   });
@@ -48,7 +50,8 @@ const sendEmail = async (req, res, next) => {
 
 const sendSms = async (req, res, next) => {
   //
-  const { to_number, message, provider = null, callback_url = "" } = req.body;
+  const { to_number, message, provider = null, callback_url = "", clientCorrelator = {} } = req.body;
+  const senderName = "axedz";
   //
   const apiKeyRecord = req.apiKey;
   if (!apiKeyRecord) {
@@ -69,7 +72,9 @@ const sendSms = async (req, res, next) => {
       to_number,
       message,
       provider,
+      senderName,
       callback_url,
+      clientCorrelator
     },
     queue: rabbitConfig.queues.sms,
   });
@@ -82,7 +87,6 @@ const sendSms = async (req, res, next) => {
     },
   });
 };
-
 
 const getUsageEvents = async (req, res, next) => {
   //
@@ -109,7 +113,6 @@ const getUsageEvents = async (req, res, next) => {
     },
   });
 };
-
 
 const getEmails = async (req, res, next) => {
   //

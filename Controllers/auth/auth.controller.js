@@ -9,6 +9,7 @@ const { UserResource } = require("@app/resource");
 
 const WelcomeMail = require("@app/mail/welcome.mail");
 const SmsOtp = require("@app/sms/sms");
+const verifyOtp = require("@app/mail/verify.mail.js");
 
 const OtpService = require("@app/Services/OtpService");
 
@@ -56,7 +57,7 @@ const signUp = async (req, res) => {
             logger.error(`WELCOME_EMAIL_FAILED userId=${user.id}`, err.message);
         });
         //
-        SmsOtp.send(phone, otpCode).catch((err) => {
+        verifyOtp.sendVerifyMail(user.email, otpCode).catch((err) => {
             logger.error(`SMS_OTP_FAILED userId=${user.id}`, err.message);
         });
         //

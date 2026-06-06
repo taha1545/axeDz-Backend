@@ -13,7 +13,7 @@ const createApiKey = async (req, res) => {
         throw new NotFoundError('User not verified or not found');
     }
     //
-    const key = crypto.randomUUID();
+    const key = `axedz_${crypto.randomUUID()}`;
     const status = 'active';
     //
     const apiKey = await db.ApiKey.create({

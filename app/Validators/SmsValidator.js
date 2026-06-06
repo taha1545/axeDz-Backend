@@ -1,16 +1,15 @@
 const { body } = require('express-validator');
-const db = require('@db/models');
 
 const sendSmsValidator = [
     body('to_number')
-        .exists({ checkFalsy: true })
-        .withMessage('to_number is required')
-        .bail()
+        .isArray({ min: 1 })
+        .withMessage('to_number must be a non-empty array'),
+
+    body('to_number.*')
         .trim()
-        .isMobilePhone('any')
-        .withMessage('Invalid phone number')
-        .isLength({ min: 8, max: 20 })
-        .withMessage('Phone number must be between 8 and 20 characters'),
+        .matches(/^\+213\d{9}$/)
+        .withMessage('Each phone number must be a valid Algerian number starting with +213'),
+
     body('message')
         .exists({ checkFalsy: true })
         .withMessage('message is required')
@@ -18,6 +17,14 @@ const sendSmsValidator = [
         .trim()
         .isLength({ min: 1, max: 160 })
         .withMessage('Message must be between 1 and 160 characters'),
+
+    body('senderName')
+        .optional()
+        .trim()
+        .isLength({ min: 3, max: 20 })
+        .withMessage('senderName must be between 3 and 20 characters')
+        .matches(/^[a-zA-Z0-9_-]+$/)
+        .withMessage('senderName can only contain letters, numbers, underscores and hyphens'),
 ];
 
 module.exports = { sendSmsValidator };

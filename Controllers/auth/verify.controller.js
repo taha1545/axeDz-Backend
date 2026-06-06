@@ -6,11 +6,12 @@ const { NotFoundError } = require("@errors");
 const SmsOtp = require("@app/sms/sms");
 const OtpService = require("@app/Services/OtpService");
 
+const verifyOtp = require("@app/mail/verify.mail.js");
 
 const sendVerifySmsOtp = async (req, res) => {
     //
-    const { phone } = req.body;
-    const user = await db.User.findOne({ where: { phone } });
+    const { email } = req.body;
+    const user = await db.User.findOne({ where: { email } });
     if (!user) {
         throw new NotFoundError("No user found with this phone");
     }
@@ -20,7 +21,9 @@ const sendVerifySmsOtp = async (req, res) => {
         userId: user.id,
         type: "verifySms",
     });
-    await SmsOtp.send(phone, otpCode);
+    verifyOtp.sendVerifyMail(user.email, otpCode).catch((err) => {
+        logger.error(`SMS_OTP_FAILED userId=${user.id}`, err.message);
+    });
     //
     return res.status(200).json({
         success: true,
@@ -29,8 +32,8 @@ const sendVerifySmsOtp = async (req, res) => {
 };
 
 const verifySmsOtp = async (req, res) => {
-    const { phone, otp_code } = req.body;
-    const user = await db.User.findOne({ where: { phone } });
+    const { email, otp_code } = req.body;
+    const user = await db.User.findOne({ where: { email } });
     if (!user) {
         throw new NotFoundError("No user found with this phone");
     }

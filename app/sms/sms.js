@@ -11,9 +11,7 @@ module.exports = {
         url,
         {
           to: phone,
-          text: `AxeDz OTP: ${otp}
-
-Expires in 10 min. Do not share it.`
+          text: `AxeDz OTP: ${otp} , Expires in 10 min. Do not share it.`
         },
         {
           headers: {

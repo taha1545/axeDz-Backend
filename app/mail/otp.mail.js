@@ -9,7 +9,7 @@ const sendOtp = async (email, otp) => {
 
   try {
     await transporter.sendMail({
-      from: `"${process.env.APP_NAME}" <${process.env.MAIL_USER}>`,
+      from: `support@axedz.com`,
       to: email,
       subject: 'Reset Your Password - OTP',
       html,

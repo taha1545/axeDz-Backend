@@ -131,8 +131,8 @@ Emits live events for **Wallet updates**, **Transaction status**, and **Notifica
 A secure wallet-based billing system natively supporting **DZD**.
 
 **Pricing:**
-* 💬 **SMS:** 3 DZD  
-* 📧 **Email:** 1 DZD
+* 💬 **SMS:** 1.5 DZD  
+* 📧 **Email:** 0.3 DZD
 
 **Billing Flow:**
 1. Validate API key ➔ Check wallet mode (free/paid).
