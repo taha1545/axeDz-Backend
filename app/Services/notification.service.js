@@ -32,7 +32,12 @@ const processNotification = async ({
         wallet.is_free &&
         (!wallet.free_expires_at || new Date(wallet.free_expires_at) > now);
 
-    if (!isFreeActive && Number(wallet.balance) < cost) {
+    // Calculate quantity based on recipient count (to_email or to_number array)
+    const recipients = createPayload.to_email || createPayload.to_number || [];
+    const quantity = Array.isArray(recipients) ? recipients.length : 1;
+    const totalCost = cost * quantity;
+
+    if (!isFreeActive && Number(wallet.balance) < totalCost) {
         throw new Error('Insufficient wallet balance');
     }
     //
@@ -51,8 +56,8 @@ const processNotification = async ({
                 api_key_id: apiKeyRecord.id,
                 service_type: type,
                 unit_cost: cost,
-                quantity: 1,
-                total_cost: cost,
+                quantity: quantity,
+                total_cost: totalCost,
                 reference_id: String(log.id),
                 mode: isFreeActive ? 'free' : 'paid',
             },
@@ -60,7 +65,7 @@ const processNotification = async ({
         );
         //
         if (!isFreeActive) {
-            const newBalance = Number(wallet.balance) - cost;
+            const newBalance = Number(wallet.balance) - totalCost;
             await wallet.update(
                 { balance: newBalance.toFixed(2) },
                 { transaction }
@@ -86,7 +91,7 @@ const processNotification = async ({
                     user_id: apiKeyRecord.user_id,
                     wallet_id: wallet.id,
                     type: 'debit',
-                    amount: cost,
+                    amount: totalCost,
                     status: 'success',
                     reference_id: `${type}_${log.id}`,
                 },
