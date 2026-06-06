@@ -94,6 +94,9 @@ const login = async (req, res) => {
     if (!user) {
         throw new NotFoundError("User not found with this email or phone");
     }
+    if(!user.password){
+        throw new NotFoundError("U should login with github or Google");
+    }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
         throw new AuthorizeError("Invalid password");
