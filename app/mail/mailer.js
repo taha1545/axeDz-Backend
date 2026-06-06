@@ -1,20 +1,22 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const {
-    MAIL_HOST,
-    MAIL_PORT,
-    MAIL_USERNAME,
-    MAIL_PASSWORD,
-} = process.env;
+const resend = new Resend("re_DLh8FADz_DZtC2NuutieUSq8jLQTNAXFp");
 
-const transporter = nodemailer.createTransport({
-    host: MAIL_HOST,
-    port: Number(MAIL_PORT),
-    secure: true,
-    auth: {
-        user: MAIL_USERNAME,
-        pass: MAIL_PASSWORD,
-    },
-});
+const sendMail = async ({ from, to, subject, html, text, cc, bcc }) => {
+    try {
+        return await resend.emails.send({
+            from,
+            to,
+            subject,
+            html,
+            text,
+            cc,
+            bcc,
+        });
+    } catch (error) {
+        console.error('Error sending email with Resend:', error);
+        throw error;
+    }
+};
 
-module.exports = transporter;
+module.exports = { sendMail };

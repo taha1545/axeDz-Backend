@@ -1,4 +1,4 @@
-const transporter = require('./mailer');
+const { sendMail: sendEmail } = require('./mailer');
 const { getTemplateHtml } = require('./template');
 
 const sendMail = async (email) => {
@@ -7,8 +7,8 @@ const sendMail = async (email) => {
     });
 
     try {
-        await transporter.sendMail({
-            from: `support@axedz.com`,
+        await sendEmail({
+            from: 'support@axedz.com',
             to: email,
             subject: 'Welcome to AxeDz',
             html,
@@ -20,3 +20,4 @@ const sendMail = async (email) => {
 };
 
 module.exports = { sendMail };
+

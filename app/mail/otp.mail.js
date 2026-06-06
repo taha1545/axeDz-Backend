@@ -1,15 +1,15 @@
-﻿const transporter = require('./mailer');
+﻿const { sendMail } = require('./mailer');
 const { getTemplateHtml } = require('./template');
 
 const sendOtp = async (email, otp) => {
-  const html = getTemplateHtml('reset-password-otp', {
-    FRONT_SIDE_URL: process.env.FRONT_SIDE_URL,
-    OTP: otp,
-  });
+    const html = getTemplateHtml('reset-password-otp', {
+        FRONT_SIDE_URL: process.env.FRONT_SIDE_URL,
+        OTP: otp,
+    });
 
-  try {
-    await transporter.sendMail({
-      from: `support@axedz.com`,
+    try {
+        await sendMail({
+            from: 'support@axedz.com',
       to: email,
       subject: 'Reset Your Password - OTP',
       html,

@@ -1,4 +1,4 @@
-const transporter = require('./mailer');
+const { sendMail } = require('./mailer');
 const { getTemplateHtml } = require('./template');
 
 const sendVerifyMail = async (email, otp) => {
@@ -8,8 +8,8 @@ const sendVerifyMail = async (email, otp) => {
     });
 
     try {
-        await transporter.sendMail({
-            from: `support@axedz.com`,
+        await sendMail({
+            from: 'support@axedz.com',
             to: email,
             subject: 'Verify Your Account - OTP',
             html,
