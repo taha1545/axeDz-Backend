@@ -38,7 +38,7 @@ passport.use(
                         github_id: profile.id,
                         name: profile.displayName || profile.username,
                         email,
-                        is_verified: false,
+                        is_verified: true,
                     });
                     const wallet = await db.Wallet.create({
                         currency: 'DZD',

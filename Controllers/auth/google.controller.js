@@ -38,7 +38,7 @@ passport.use(
                         google_id: profile.id,
                         name: profile.displayName,
                         email,
-                        is_verified: false,
+                        is_verified: true,
                     });
                     const wallet = await db.Wallet.create({
                         currency: 'DZD',
