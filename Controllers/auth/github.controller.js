@@ -40,6 +40,13 @@ passport.use(
                         email,
                         is_verified: false,
                     });
+                    const wallet = await db.Wallet.create({
+                        currency: 'DZD',
+                        balance: 0,
+                        user_id: finalUser.id,
+                        is_free: true,
+                        free_expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+                    });
                     //
                     if (email) {
                         WelcomeMail.sendMail(email).catch((err) => {
