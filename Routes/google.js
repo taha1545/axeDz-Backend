@@ -22,7 +22,7 @@ router.get(
         const { accessToken, refreshToken } = TokenSession.createTokens(user);
         TokenSession.setRefreshCookie(res, refreshToken);
         //
-        return res.redirect(`${process.env.FRONT_URL_CALLBACK}?token=${accessToken}`);
+        return res.redirect(`${process.env.FRONT_URL_CALLBACK}/callback?token=${accessToken}`);
     }
 );
 
